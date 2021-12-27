@@ -1,4 +1,7 @@
 import { Component, OnInit, } from '@angular/core';
+import { UiService } from 'src/app/service/ui.service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -8,16 +11,27 @@ import { Component, OnInit, } from '@angular/core';
 export class HeaderComponent implements OnInit {
   
 
-  constructor() { }
+  constructor(
+    private uiService: UiService,
+    private router: Router
+  ) {
+    this.subscription = this.uiService.onToggle().subscribe(value => this.showAddTask = value)
+   }
 
   title: string = 'My Task List';
+  showAddTask: boolean= false;
+  subscription?: Subscription
 
   ngOnInit(): void {
   }
 
   toggleAddTask() {
-    console.log("toggleAddTask!");
-     
+    this.uiService.toggleAddTask();
+    
+  }
+
+  hasRoute(route: string){
+   return this.router.url === route
   }
 
 }

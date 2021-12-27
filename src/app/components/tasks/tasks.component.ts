@@ -11,18 +11,34 @@ import {Task} from '../../Task'
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit {
-  tasks: Task[] = [];
+  tasks: Task[] = []
  
   constructor(
     private taskService: TasksService
-  ) { 
-    
-  }
+  ) { }
 
   ngOnInit(): void {
-   this.taskService.getTask().subscribe((tasks)=>(
-     this.tasks = tasks
-   ));
+   this.taskService.getTask().subscribe((task)=>(
+     this.tasks = task
+   ))
   }
 
+  deleteTask(task:Task){
+    this.taskService.deleteTask(task)
+    .subscribe(() => [
+    this.tasks = this.tasks.filter((t) => t.id !== task.id)
+    ]) 
+  }
+
+  toggleReminder(task:Task) {
+    task.reminder = !task.reminder
+    this.taskService.updateTaskReminder(task).subscribe();
+  
+  }
+
+  addTask(task:Task){
+    this.taskService.addTask(task).subscribe((task) => { 
+    this.tasks.push(task)
+    })
+  }
 }
